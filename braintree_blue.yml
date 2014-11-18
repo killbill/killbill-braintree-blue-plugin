@@ -1,0 +1,22 @@
+:braintree_blue:
+  :merchant_id:  
+  :public_key:  
+  :private_key: 
+  :test: true
+  :log_file: /var/tmp/braintree_blue.log
+  :multicurrency: true
+
+:database:
+  :adapter: sqlite3
+  :database: test.db
+# For MySQL
+#  :adapter: 'jdbc'
+#  :username: 'killbill'
+#  :password: 'killbill'
+#  :driver: 'com.mysql.jdbc.Driver'
+#  :url: 'jdbc:mysql://127.0.0.1:3306/killbill'
+
+:multicurrency:
+  :PLN: PLN
+  :EUR: EUR
+  :USD: USD
