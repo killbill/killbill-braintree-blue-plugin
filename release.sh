@@ -28,11 +28,11 @@ rake release
 echo 'Building artifact'
 rake killbill:package
 
-ARTIFACT="$PWD/pkg/killbill-braintree-blue-$VERSION.tar.gz"
+ARTIFACT="$PWD/pkg/killbill-braintree_blue-$VERSION.tar.gz"
 echo "Pushing $ARTIFACT to Maven Central"
 mvn gpg:sign-and-deploy-file \
     -DgroupId=org.kill-bill.billing.plugin.ruby \
-    -DartifactId=braintree-blue-plugin \
+    -DartifactId=braintree_blue-plugin \
     -Dversion=$VERSION \
     -Dpackaging=tar.gz \
     -DrepositoryId=ossrh-releases \

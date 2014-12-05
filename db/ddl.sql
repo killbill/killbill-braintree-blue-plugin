@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS `braintree_blue_payment_methods`;
 CREATE TABLE `braintree_blue_payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kb_payment_method_id` varchar(255) DEFAULT NULL,
@@ -7,10 +6,10 @@ CREATE TABLE `braintree_blue_payment_methods` (
   `cc_first_name` varchar(255) DEFAULT NULL,
   `cc_last_name` varchar(255) DEFAULT NULL,
   `cc_type` varchar(255) DEFAULT NULL,
-  `cc_exp_month` int(11) DEFAULT NULL,
-  `cc_exp_year` int(11) DEFAULT NULL,
-  `cc_number` int(11) DEFAULT NULL,
-  `cc_last_4` int(11) DEFAULT NULL,
+  `cc_exp_month` varchar(255) DEFAULT NULL,
+  `cc_exp_year` varchar(255) DEFAULT NULL,
+  `cc_number` varchar(255) DEFAULT NULL,
+  `cc_last_4` varchar(255) DEFAULT NULL,
   `cc_start_month` varchar(255) DEFAULT NULL,
   `cc_start_year` varchar(255) DEFAULT NULL,
   `cc_issue_number` varchar(255) DEFAULT NULL,
@@ -32,7 +31,6 @@ CREATE TABLE `braintree_blue_payment_methods` (
   KEY `index_braintree_blue_payment_methods_on_kb_payment_method_id` (`kb_payment_method_id`)
 ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-DROP TABLE IF EXISTS `braintree_blue_transactions`;
 CREATE TABLE `braintree_blue_transactions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `braintree_blue_response_id` int(11) NOT NULL,
@@ -40,9 +38,10 @@ CREATE TABLE `braintree_blue_transactions` (
   `kb_payment_id` varchar(255) NOT NULL,
   `kb_payment_transaction_id` varchar(255) NOT NULL,
   `transaction_type` varchar(255) NOT NULL,
-  `txn_id` varchar(255) NOT NULL,
-  `amount_in_cents` int(11) NOT NULL,
-  `currency` varchar(255) NOT NULL,
+  `payment_processor_account_id` varchar(255) DEFAULT NULL,
+  `txn_id` varchar(255) DEFAULT NULL,
+  `amount_in_cents` int(11) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `kb_account_id` varchar(255) NOT NULL,
@@ -51,13 +50,13 @@ CREATE TABLE `braintree_blue_transactions` (
   KEY `index_braintree_blue_transactions_on_kb_payment_id` (`kb_payment_id`)
 ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-DROP TABLE IF EXISTS `braintree_blue_responses`;
 CREATE TABLE `braintree_blue_responses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `api_call` varchar(255) NOT NULL,
   `kb_payment_id` varchar(255) DEFAULT NULL,
   `kb_payment_transaction_id` varchar(255) DEFAULT NULL,
   `transaction_type` varchar(255) DEFAULT NULL,
+  `payment_processor_account_id` varchar(255) DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
   `authorization` varchar(255) DEFAULT NULL,
   `fraud_review` tinyint(1) DEFAULT NULL,

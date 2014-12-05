@@ -18,16 +18,12 @@ end
 
 helpers do
   def plugin(session = {})
-    ::Killbill::BraintreeBlue::PrivatePaymentPlugin.new(:braintree_blue,
-                                                            ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod,
-                                                            ::Killbill::BraintreeBlue::BraintreeBlueTransaction,
-                                                            ::Killbill::BraintreeBlue::BraintreeBlueResponse,
-                                                            session)
+    ::Killbill::BraintreeBlue::PrivatePaymentPlugin.new(session)
   end
 end
 
-# curl -v http://127.0.0.1:9292/plugins/killbill-braintree-blue/form
-get '/plugins/killbill-braintree-blue/form', :provides => 'html' do
+# curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/form
+get '/plugins/killbill-braintree_blue/form', :provides => 'html' do
   order_id   = request.GET['order_id']
   account_id = request.GET['account_id']
   options    = {
@@ -56,8 +52,8 @@ get '/plugins/killbill-braintree-blue/form', :provides => 'html' do
   erb :form
 end
 
-# curl -v http://127.0.0.1:9292/plugins/killbill-braintree-blue/1.0/pms/1
-get '/plugins/killbill-braintree-blue/1.0/pms/:id', :provides => 'json' do
+# curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/1.0/pms/1
+get '/plugins/killbill-braintree_blue/1.0/pms/:id', :provides => 'json' do
   if pm = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod.find_by_id(params[:id].to_i)
     pm.to_json
   else
@@ -65,8 +61,8 @@ get '/plugins/killbill-braintree-blue/1.0/pms/:id', :provides => 'json' do
   end
 end
 
-# curl -v http://127.0.0.1:9292/plugins/killbill-braintree-blue/1.0/transactions/1
-get '/plugins/killbill-braintree-blue/1.0/transactions/:id', :provides => 'json' do
+# curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/1.0/transactions/1
+get '/plugins/killbill-braintree_blue/1.0/transactions/:id', :provides => 'json' do
   if transaction = ::Killbill::BraintreeBlue::BraintreeBlueTransaction.find_by_id(params[:id].to_i)
     transaction.to_json
   else
@@ -74,8 +70,8 @@ get '/plugins/killbill-braintree-blue/1.0/transactions/:id', :provides => 'json'
   end
 end
 
-# curl -v http://127.0.0.1:9292/plugins/killbill-braintree-blue/1.0/responses/1
-get '/plugins/killbill-braintree-blue/1.0/responses/:id', :provides => 'json' do
+# curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/1.0/responses/1
+get '/plugins/killbill-braintree_blue/1.0/responses/:id', :provides => 'json' do
   if transaction = ::Killbill::BraintreeBlue::BraintreeBlueResponse.find_by_id(params[:id].to_i)
     transaction.to_json
   else

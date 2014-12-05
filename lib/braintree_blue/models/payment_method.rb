@@ -4,7 +4,7 @@ module Killbill #:nodoc:
 
       self.table_name = 'braintree_blue_payment_methods'
 
-      def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, cc_or_token, response, options, extra_params = {})
+      def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, cc_or_token, response, options, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
 
         braintree_customer_id = self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
 
@@ -32,7 +32,7 @@ module Killbill #:nodoc:
                   :cc_first_name         => customer_response['first_name'],
                   :cc_last_name          => customer_response['last_name']
               }.merge!(extra_params),
-              ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
+              model)
       end
 
       def self.search_where_clause(t, search_key)

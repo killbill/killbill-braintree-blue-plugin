@@ -23,11 +23,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.kill-bill.billing.plugin.ruby</groupId>
-    <artifactId>braintree-blue-plugin</artifactId>
+    <artifactId>braintree_blue-plugin</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
-    <name>braintree-blue-plugin</name>
-    <url>http://github.com/killbill/killbill-braintree-blue-plugin</url>
+    <name>braintree_blue-plugin</name>
+    <url>http://github.com/killbill/killbill-braintree_blue-plugin</url>
     <description>Plugin for accessing BraintreeBlue as a payment gateway</description>
     <licenses>
         <license>
@@ -37,8 +37,8 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/killbill/killbill-braintree-blue-plugin.git</connection>
-        <url>https://github.com/killbill/killbill-braintree-blue-plugin/</url>
-        <developerConnection>scm:git:git@github.com:killbill/killbill-braintree-blue-plugin.git</developerConnection>
+        <connection>scm:git:git://github.com/killbill/killbill-braintree_blue-plugin.git</connection>
+        <url>https://github.com/killbill/killbill-braintree_blue-plugin/</url>
+        <developerConnection>scm:git:git@github.com:killbill/killbill-braintree_blue-plugin.git</developerConnection>
     </scm>
 </project>

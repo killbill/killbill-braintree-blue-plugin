@@ -1,7 +1,7 @@
 version = File.read(File.expand_path('../VERSION', __FILE__)).strip
 
 Gem::Specification.new do |s|
-  s.name        = 'killbill-braintree-blue'
+  s.name        = 'killbill-braintree_blue'
   s.version     = version
   s.summary     = 'Plugin to use BraintreeBlue as a gateway.'
   s.description = 'Kill Bill payment plugin for BraintreeBlue.'
@@ -22,9 +22,9 @@ Gem::Specification.new do |s|
 
   s.rdoc_options << '--exclude' << '.'
 
-  s.add_dependency 'killbill', '~> 3.2.0'
+  s.add_dependency 'killbill', '~> 3.1.11'
   s.add_dependency 'activemerchant', '~> 1.44.1'
-  s.add_development_dependency 'offsite_payments', '~> 2.0.1'
+  s.add_dependency 'offsite_payments', '~> 2.0.1'
   s.add_dependency 'activerecord', '~> 4.1.0'
   s.add_dependency 'actionpack', '~> 4.1.0'
   s.add_dependency 'actionview', '~> 4.1.0'
