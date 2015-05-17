@@ -7,8 +7,8 @@ module Killbill #:nodoc:
           # Change this if needed
           ::ActiveMerchant::Billing::BraintreeBlueGateway.new :merchant_id => config[:merchant_id],
                                                               :public_key  => config[:public_key],
-                                                              :private_key => config[:private_key]        
-	end
+                                                              :private_key => config[:private_key]
+        end
 
         super(gateway_builder,
               :braintree_blue,
@@ -17,12 +17,20 @@ module Killbill #:nodoc:
               ::Killbill::BraintreeBlue::BraintreeBlueResponse)
       end
 
+      def on_event(event)
+        # Require to deal with per tenant configuration invalidation
+        super(event)
+        #
+        # Custom event logic could be added below...
+        #
+      end
+
       def authorize_payment(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
         # Pass extra parameters for the gateway here
-        options = { }
-        
+        options = {}
+
         options.merge(get_merchant_id(currency))
-          
+
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
       end
@@ -46,7 +54,6 @@ module Killbill #:nodoc:
       def void_payment(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        options.merge(get_merchant_id(currency))
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, properties, context)
       end
@@ -70,6 +77,7 @@ module Killbill #:nodoc:
       def get_payment_info(kb_account_id, kb_payment_id, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
+
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, properties, context)
       end
@@ -83,12 +91,12 @@ module Killbill #:nodoc:
       end
 
       def add_payment_method(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
-	       braintree_customer_id = BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, context.tenant_id)
+       braintree_customer_id = BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, context.tenant_id)
 
         options = {
             :customer => braintree_customer_id,
             :company => kb_account_id
-	       }
+        }
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
       end
@@ -96,6 +104,7 @@ module Killbill #:nodoc:
       def delete_payment_method(kb_account_id, kb_payment_method_id, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
+
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_method_id, properties, context)
       end
@@ -103,6 +112,7 @@ module Killbill #:nodoc:
       def get_payment_method_detail(kb_account_id, kb_payment_method_id, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
+
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_method_id, properties, context)
       end
@@ -114,6 +124,7 @@ module Killbill #:nodoc:
       def get_payment_methods(kb_account_id, refresh_from_gateway, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
+
         properties = merge_properties(properties, options)
         super(kb_account_id, refresh_from_gateway, properties, context)
       end
@@ -121,6 +132,7 @@ module Killbill #:nodoc:
       def search_payment_methods(search_key, offset, limit, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
+
         properties = merge_properties(properties, options)
         super(search_key, offset, limit, properties, context)
       end
@@ -145,7 +157,7 @@ module Killbill #:nodoc:
 
       def process_notification(notification, properties, context)
         # Pass extra parameters for the gateway here
-        options = {}       
+        options = {}
         properties = merge_properties(properties, options)
 
         super(notification, properties, context) do |gw_notification, service|
@@ -156,11 +168,10 @@ module Killbill #:nodoc:
           # gw_notification.entity =
         end
       end
-        
+
       def get_merchant_id(currency)
-        
         options = {}
-        if (config[:braintree_blue][:multicurrency]) 
+        if (config[:braintree_blue][:multicurrency])
             case currency
                 when "USD"
                     options = { :merchant_account_id => config[:multicurrency][:USD] }
@@ -170,9 +181,8 @@ module Killbill #:nodoc:
                     options = { :merchant_account_id => config[:multicurrency][:PLN] }
             end
         end
-        options     
+        options
       end
-    
     end
   end
 end

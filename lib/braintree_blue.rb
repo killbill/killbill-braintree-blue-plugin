@@ -22,4 +22,3 @@ require 'braintree_blue/private_api'
 require 'braintree_blue/models/payment_method'
 require 'braintree_blue/models/response'
 require 'braintree_blue/models/transaction'
-

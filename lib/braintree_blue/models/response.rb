@@ -7,7 +7,6 @@ module Killbill #:nodoc:
       has_one :braintree_blue_transaction
 
       def self.from_response(api_call, kb_account_id, kb_payment_id, kb_payment_transaction_id, transaction_type, payment_processor_account_id, kb_tenant_id, response, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBlueResponse)
-	
         super(api_call,
               kb_account_id,
               kb_payment_id,
@@ -31,7 +30,7 @@ module Killbill #:nodoc:
               }.merge!(extra_params),
               model)
       end
-        
+
       def self.search_where_clause(t, search_key)
         where_clause = t[:params_braintree_customer_id].eq(search_key)
                    .or(t[:params_braintree_customer_credit_card_token].eq(search_key))
@@ -40,8 +39,7 @@ module Killbill #:nodoc:
         where_clause = where_clause.and(t[:success].eq(true))
 
         super.or(where_clause)
-      end 
-        
+      end
     end
   end
 end

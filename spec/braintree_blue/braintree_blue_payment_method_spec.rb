@@ -11,22 +11,24 @@ describe Killbill::BraintreeBlue::BraintreeBluePaymentMethod do
     do_search('foo', kb_tenant_id).size.should == 0
 
     pm = Killbill::BraintreeBlue::BraintreeBluePaymentMethod.create :kb_account_id        => '11-22-33-44',
-                                                      :kb_payment_method_id => '55-66-77-88',
-                                                      :kb_tenant_id          => kb_tenant_id,
-                                                      :braintree_customer_id   => '123xka',
-                                                      :token                => '38102343',
-                                                      :cc_first_name        => 'ccFirstName',
-                                                      :cc_last_name         => 'ccLastName',
-                                                      :cc_type              => 'ccType',
-                                                      :cc_exp_month         => 10,
-                                                      :cc_exp_year          => 11,
-                                                      :cc_last_4            => 1234,
-                                                      :address1             => 'address1',
-                                                      :address2             => 'address2',
-                                                      :city                 => 'city',
-                                                      :state                => 'state',
-                                                      :zip                  => 'zip',
-                                                      :country              => 'country'
+                                                                    :kb_payment_method_id => '55-66-77-88',
+                                                                    :kb_tenant_id          => kb_tenant_id,
+                                                                    :braintree_customer_id   => '123xka',
+                                                                    :token                => '38102343',
+                                                                    :cc_first_name        => 'ccFirstName',
+                                                                    :cc_last_name         => 'ccLastName',
+                                                                    :cc_type              => 'ccType',
+                                                                    :cc_exp_month         => 10,
+                                                                    :cc_exp_year          => 11,
+                                                                    :cc_last_4            => 1234,
+                                                                    :address1             => 'address1',
+                                                                    :address2             => 'address2',
+                                                                    :city                 => 'city',
+                                                                    :state                => 'state',
+                                                                    :zip                  => 'zip',
+                                                                    :country              => 'country',
+                                                                    :created_at => Time.now,
+                                                                    :updated_at => Time.now
 
     do_search('foo', kb_tenant_id).size.should == 0
     do_search(pm.token, kb_tenant_id).size.should == 1
@@ -39,22 +41,24 @@ describe Killbill::BraintreeBlue::BraintreeBluePaymentMethod do
     do_search('Name', kb_tenant_id).size.should == 1
 
     pm2 = Killbill::BraintreeBlue::BraintreeBluePaymentMethod.create :kb_account_id        => '22-33-44-55',
-                                                       :kb_payment_method_id => '66-77-88-99',
-                                                       :kb_tenant_id          => kb_tenant_id,
-                                                       :braintree_customer_id   => '123xka',
-                                                       :token                => '49384029302',
-                                                       :cc_first_name        => 'ccFirstName',
-                                                       :cc_last_name         => 'ccLastName',
-                                                       :cc_type              => 'ccType',
-                                                       :cc_exp_month         => 10,
-                                                       :cc_exp_year          => 11,
-                                                       :cc_last_4            => 1234,
-                                                       :address1             => 'address1',
-                                                       :address2             => 'address2',
-                                                       :city                 => 'city',
-                                                       :state                => 'state',
-                                                       :zip                  => 'zip',
-                                                       :country              => 'country'
+                                                                     :kb_payment_method_id => '66-77-88-99',
+                                                                     :kb_tenant_id          => kb_tenant_id,
+                                                                     :braintree_customer_id   => '123xka',
+                                                                     :token                => '49384029302',
+                                                                     :cc_first_name        => 'ccFirstName',
+                                                                     :cc_last_name         => 'ccLastName',
+                                                                     :cc_type              => 'ccType',
+                                                                     :cc_exp_month         => 10,
+                                                                     :cc_exp_year          => 11,
+                                                                     :cc_last_4            => 1234,
+                                                                     :address1             => 'address1',
+                                                                     :address2             => 'address2',
+                                                                     :city                 => 'city',
+                                                                     :state                => 'state',
+                                                                     :zip                  => 'zip',
+                                                                     :country              => 'country',
+                                                                     :created_at => Time.now,
+                                                                     :updated_at => Time.now
 
     do_search('foo', kb_tenant_id).size.should == 0
     do_search(pm.token, kb_tenant_id).size.should == 1

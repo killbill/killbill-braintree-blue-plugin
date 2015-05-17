@@ -5,7 +5,6 @@ module Killbill #:nodoc:
       self.table_name = 'braintree_blue_payment_methods'
 
       def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, cc_or_token, response, options, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
-
         braintree_customer_id = self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
 
         unless braintree_customer_id.blank?
@@ -49,7 +48,6 @@ module Killbill #:nodoc:
         raise "Kill Bill account #{kb_account_id} mapping to multiple Braintree customers: #{braintree_customer_ids}" if braintree_customer_ids.size > 1
         braintree_customer_ids.first
       end
-
     end
   end
 end

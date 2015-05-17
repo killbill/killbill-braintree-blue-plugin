@@ -19,18 +19,17 @@ _yardoc
 doc/
 
 .jbundler
-Jarfile.lock
-Gemfile.lock
 
 .DS_Store
 
-# Build directory
-killbill-braintree_blue/
-
 # Testing database
 test.db
+
+braintree_blue.log
 
 target
 pom.xml.asc
 
 .idea/
+
+Gemfile.head.lock
