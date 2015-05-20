@@ -7,12 +7,21 @@ module Killbill #:nodoc:
       def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, cc_or_token, response, options, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
         braintree_customer_id = self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
 
-        unless braintree_customer_id.blank?
+        if braintree_customer_id.blank?
+          card_response     = response.params['braintree_customer']['credit_cards'][0]
+          customer_response = response.params['braintree_customer']
+        elsif response.respond_to?(:responses)
           card_response     = response.responses.first.params
           customer_response = response.responses.last.params
         else
-          card_response     = response.params['braintree_customer']['credit_cards'][0]
-          customer_response = response.params['braintree_customer']
+          # Assume that the payment method already exists in Braintree and
+          # we're just importing it into KillBill. Useful in conjunction with
+          # the skip_gw option. We basically just need to stuff some of the
+          # values so that the call below doesn't fail.
+          card_response = {
+            'expiration_date' => "#{extra_params[:cc_expiration_month]}/#{extra_params[:cc_expiration_year]}"
+          }
+          customer_response = { 'id' => braintree_customer_id }
         end
 
         super(kb_account_id,
