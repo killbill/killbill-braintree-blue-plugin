@@ -5,7 +5,7 @@ module Killbill #:nodoc:
       self.table_name = 'braintree_blue_payment_methods'
 
       def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, cc_or_token, response, options, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
-        braintree_customer_id = self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
+        braintree_customer_id = options[:customer] || self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
 
         if braintree_customer_id.blank?
           card_response     = response.params['braintree_customer']['credit_cards'][0]

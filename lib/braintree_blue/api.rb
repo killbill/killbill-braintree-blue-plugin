@@ -91,7 +91,8 @@ module Killbill #:nodoc:
       end
 
       def add_payment_method(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
-       braintree_customer_id = BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, context.tenant_id)
+        braintree_customer_id = find_value_from_properties(payment_method_props.properties, :customer) ||
+          BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, context.tenant_id)
 
         options = {
             :customer => braintree_customer_id,
