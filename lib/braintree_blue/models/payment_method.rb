@@ -4,38 +4,31 @@ module Killbill #:nodoc:
 
       self.table_name = 'braintree_blue_payment_methods'
 
-      def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, cc_or_token, response, options, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
-        braintree_customer_id = options[:customer] || self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
+      # Note: the ActiveMerchant Braintree implementation puts the customer id in the authorization field, not the token
+      def self.from_response(kb_account_id, kb_payment_method_id, kb_tenant_id, b_customer_id, response, options, extra_params = {}, model = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod)
+        braintree_customer_id = options[:customer] || b_customer_id || self.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
 
-        if braintree_customer_id.blank?
-          card_response     = response.params['braintree_customer']['credit_cards'][0]
-          customer_response = response.params['braintree_customer']
-        elsif response.respond_to?(:responses)
-          card_response     = response.responses.first.params
-          customer_response = response.responses.last.params
-        else
-          # Assume that the payment method already exists in Braintree and
-          # we're just importing it into KillBill. Useful in conjunction with
-          # the skip_gw option. We basically just need to stuff some of the
-          # values so that the call below doesn't fail.
-          card_response = {
-            'expiration_date' => "#{extra_params[:cc_expiration_month]}/#{extra_params[:cc_expiration_year]}"
-          }
-          customer_response = { 'id' => braintree_customer_id }
-        end
+        primary_response = response.respond_to?(:responses) ? response.primary_response : response
+
+        # Unfortunately, the ActiveMerchant Braintree implementation will drop that information when adding a card to an existing customer
+        customer_response = primary_response.params['braintree_customer'] || {}
+
+        token = primary_response.params['credit_card_token']
+        card_response = (customer_response['credit_cards'] || []).first || {}
+        cc_exp_dates = (card_response['expiration_date'] || '').split('/')
 
         super(kb_account_id,
               kb_payment_method_id,
               kb_tenant_id,
-              cc_or_token,
+              token,
               response,
               options,
               {
-                  :braintree_customer_id => customer_response['id'],
-                  :token              	 => customer_response['id'],
+                  :braintree_customer_id => braintree_customer_id,
+                  :token                 => token,
                   :cc_type               => card_response['card_type'],
-                  :cc_exp_month          => card_response['expiration_date'].split('/').first,
-                  :cc_exp_year           => card_response['expiration_date'].split('/').last,
+                  :cc_exp_month          => cc_exp_dates.first,
+                  :cc_exp_year           => cc_exp_dates.last,
                   :cc_last_4             => card_response['last_4'],
                   :cc_first_name         => customer_response['first_name'],
                   :cc_last_name          => customer_response['last_name']

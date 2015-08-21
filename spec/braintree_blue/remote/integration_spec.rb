@@ -36,6 +36,56 @@ describe Killbill::BraintreeBlue::PaymentPlugin do
     @plugin.stop_plugin
   end
 
+  # See https://github.com/killbill/killbill-braintree-blue-plugin/issues/3
+  it 'should be able to add multiple cards to the same customer' do
+    kb_account_id = SecureRandom.uuid
+    kb_tenant_id = @call_context.tenant_id
+    ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id).should be_nil
+
+    properties = []
+    pm_overrides = {
+        :zip => '12345',
+        :cc_verification_value => 123
+    }
+    create_payment_method(::Killbill::BraintreeBlue::BraintreeBluePaymentMethod, kb_account_id, kb_tenant_id, properties, pm_overrides.dup)
+    b_customer_id = ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id)
+    b_customer_id.should_not be_nil
+
+    # Add a second card on the same account (same Braintree customer)
+    pm_overrides[:cc_number] = '4111111111111111'
+    create_payment_method(::Killbill::BraintreeBlue::BraintreeBluePaymentMethod, kb_account_id, kb_tenant_id, properties, pm_overrides.dup)
+    ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id).should == b_customer_id
+
+    pms = @plugin.get_payment_methods(kb_account_id, false, properties, @call_context)
+    pms.size.should == 2
+
+    # Verify tokens are different, and don't match the Braintree customer id
+    pm1 = @plugin.get_payment_method_detail(kb_account_id, pms[0].payment_method_id, properties, @call_context)
+    pm2 = @plugin.get_payment_method_detail(kb_account_id, pms[1].payment_method_id, properties, @call_context)
+    pm1.external_payment_method_id.should_not == pm2.external_payment_method_id
+    pm1.external_payment_method_id.should_not == b_customer_id
+    pm2.external_payment_method_id.should_not == b_customer_id
+
+    # Add a third card on the same account (same Braintree customer)
+    pm_overrides[:cc_number] = '5555555555554444'
+    create_payment_method(::Killbill::BraintreeBlue::BraintreeBluePaymentMethod, kb_account_id, kb_tenant_id, properties, pm_overrides.dup)
+    ::Killbill::BraintreeBlue::BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, kb_tenant_id).should == b_customer_id
+
+    pms = @plugin.get_payment_methods(kb_account_id, false, properties, @call_context)
+    pms.size.should == 3
+
+    # Verify tokens are different, and don't match the Braintree customer id
+    pm1 = @plugin.get_payment_method_detail(kb_account_id, pms[0].payment_method_id, properties, @call_context)
+    pm2 = @plugin.get_payment_method_detail(kb_account_id, pms[1].payment_method_id, properties, @call_context)
+    pm3 = @plugin.get_payment_method_detail(kb_account_id, pms[2].payment_method_id, properties, @call_context)
+    pm1.external_payment_method_id.should_not == pm2.external_payment_method_id
+    pm1.external_payment_method_id.should_not == pm3.external_payment_method_id
+    pm2.external_payment_method_id.should_not == pm3.external_payment_method_id
+    pm1.external_payment_method_id.should_not == b_customer_id
+    pm2.external_payment_method_id.should_not == b_customer_id
+    pm3.external_payment_method_id.should_not == b_customer_id
+  end
+
   it 'should be able to charge a Credit Card directly' do
     properties = build_pm_properties(nil,
                                      {
