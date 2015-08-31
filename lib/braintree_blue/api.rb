@@ -98,8 +98,9 @@ module Killbill #:nodoc:
           BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, context.tenant_id)
 
         options = {
-            :customer => braintree_customer_id,
-            :company => kb_account_id
+          :token => find_value_from_properties(payment_method_props.properties, :token),
+          :customer => braintree_customer_id,
+          :company => kb_account_id
         }
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
