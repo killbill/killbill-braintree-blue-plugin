@@ -13,6 +13,7 @@ Kill Bill compatibility
 | Plugin version | Kill Bill version |
 | -------------: | ----------------: |
 | 0.0.y          | 0.14.z            |
+| 0.1.y          | 0.15.z            |
 
 Requirements
 ------------
