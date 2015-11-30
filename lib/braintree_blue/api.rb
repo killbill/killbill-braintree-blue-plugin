@@ -98,10 +98,27 @@ module Killbill #:nodoc:
           BraintreeBluePaymentMethod.braintree_customer_id_from_kb_account_id(kb_account_id, context.tenant_id)
 
         options = {
-          :token => find_value_from_properties(payment_method_props.properties, :token),
+          :payment_method_nonce => find_value_from_properties(payment_method_props.properties, :payment_method_nonce),
           :customer => braintree_customer_id,
           :company => kb_account_id
         }
+
+        if ::Killbill::Plugin::ActiveMerchant::Utils.normalized(options, :skip_gw)
+          # See https://github.com/killbill/killbill-braintree-blue-plugin/pull/4
+          options[:token] = find_value_from_properties(payment_method_props.properties, :token)
+        elsif find_value_from_properties(payment_method_props.properties, :cc_number).blank? &&
+             !find_value_from_properties(payment_method_props.properties, :token).blank?
+          pm_props_hsh = properties_to_hash(payment_method_props.properties)
+
+          # Pass 'credit_card_token' (along with CC details) or 'payment_method_nonce'
+          # For convenience, we translate 'token' into 'payment_method_nonce'
+          # Note: we remove the token because the Braintree AM implementation always requires a CreditCard object
+          options[:payment_method_nonce] = pm_props_hsh.delete(:token)
+
+          payment_method_props = Killbill::Plugin::Model::PaymentMethodPlugin.new
+          payment_method_props.properties = hash_to_properties(pm_props_hsh)
+        end
+
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
       end

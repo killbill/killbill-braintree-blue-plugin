@@ -86,6 +86,25 @@ describe Killbill::BraintreeBlue::PaymentPlugin do
     pm3.external_payment_method_id.should_not == b_customer_id
   end
 
+  it 'should be able to create a customer with a nonce' do
+    kb_account_id = SecureRandom.uuid
+    kb_payment_method_id = SecureRandom.uuid
+
+    info = ::Killbill::Plugin::Model::PaymentMethodPlugin.new
+    info.properties = []
+    info.properties << build_property('token', 'ABCDEF')
+    info.properties << build_property('cc_first_name', 'John')
+    info.properties << build_property('cc_last_name', 'Doe')
+
+    begin
+      @plugin.add_payment_method(kb_account_id, kb_payment_method_id, info, true, [], @call_context)
+      fail('it should not accept a random nonce')
+    rescue => e
+      # TODO Could we generate a valid nonce?
+      e.message.starts_with?('Unknown payment_method_nonce.').should be_true
+    end
+  end
+
   it 'should be able to charge a Credit Card directly' do
     properties = build_pm_properties(nil,
                                      {
