@@ -126,6 +126,37 @@ curl -v \
      http://127.0.0.1:8080/1.0/kb/accounts/<ACCOUNT_ID>/payments
 ```
 
+Alternatively, if you are using the JS v2 SDK, generate a nonce as follows:
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+</head>
+<body>
+  <script>
+    var client = new braintree.api.Client({clientToken: token});
+
+    client.tokenizeCard({
+      number: "4111111111111111",
+      expirationDate: "10/20"
+    }, function (err, nonce) {
+      console.log(nonce);
+    });
+  </script>
+</body>
+</html>
+```
+
+where `token` is the server-side generated client token. For convenience, the plugin provides an endpoint to generate it:
+
+```
+curl http://127.0.0.1:8080/plugins/killbill-braintree_blue/token?kb_tenant_id=<TENANT_ID>
+```
+
+
+
 Plugin properties
 -----------------
 
