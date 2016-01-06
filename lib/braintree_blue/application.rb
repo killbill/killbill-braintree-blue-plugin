@@ -2,6 +2,8 @@
 
 set :views, File.expand_path(File.dirname(__FILE__) + '/views')
 
+require 'braintree'
+
 include Killbill::Plugin::ActiveMerchant::Sinatra
 
 configure do
@@ -20,6 +22,22 @@ helpers do
   def plugin(session = {})
     ::Killbill::BraintreeBlue::PrivatePaymentPlugin.new(session)
   end
+end
+
+# curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/token
+get '/plugins/killbill-braintree_blue/token', :provides => 'json' do
+  kb_tenant_id = request.GET['kb_tenant_id']
+  environment = request.GET['environment'] || 'sandbox'
+  customer_id = request.GET['customer_id']
+
+  bconfig = (config(kb_tenant_id) || {})[:braintree_blue] || {}
+
+  Braintree::Configuration.environment = environment.to_sym
+  Braintree::Configuration.merchant_id = bconfig[:merchant_id]
+  Braintree::Configuration.private_key = bconfig[:private_key]
+  Braintree::Configuration.public_key = bconfig[:public_key]
+
+  Braintree::ClientToken.generate(:customer_id => customer_id)
 end
 
 # curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/form
