@@ -155,7 +155,59 @@ where `token` is the server-side generated client token. For convenience, the pl
 curl http://127.0.0.1:8080/plugins/killbill-braintree_blue/token?kb_tenant_id=<TENANT_ID>
 ```
 
+You can then create the customer with the nonce:
 
+```
+curl -v \
+     -X POST \
+     -u admin:password \
+     -H 'X-Killbill-ApiKey: bob' \
+     -H 'X-Killbill-ApiSecret: lazar' \
+     -H 'X-Killbill-CreatedBy: admin' \
+     -H 'Content-Type: application/json' \
+     -d '{
+       "pluginName": "killbill-braintree_blue",
+       "pluginInfo": {
+         "properties": [
+           {
+             "key": "ccFirstName",
+             "value": "John"
+           },
+           {
+             "key": "ccLastName",
+             "value": "Doe"
+           },
+           {
+             "key": "address1",
+             "value": "5th Street"
+           },
+           {
+             "key": "city",
+             "value": "San Francisco"
+           },
+           {
+             "key": "zip",
+             "value": "94111"
+           },
+           {
+             "key": "state",
+             "value": "CA"
+           },
+           {
+             "key": "country",
+             "value": "US"
+           },
+           {
+             "key": "token",
+             "value": "<NONCE>"
+           }
+         ]
+       }
+     }' \
+     "http://127.0.0.1:8080/1.0/kb/accounts/<ACCOUNT_ID>/paymentMethods?isDefault=true"
+```
+
+Note that you cannot add a second card on an existing customer using a nonce.
 
 Plugin properties
 -----------------
