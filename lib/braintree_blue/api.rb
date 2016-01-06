@@ -110,7 +110,7 @@ module Killbill #:nodoc:
              !find_value_from_properties(payment_method_props.properties, :token).blank?
           pm_props_hsh = properties_to_hash(payment_method_props.properties)
 
-          # Pass 'credit_card_token' (along with CC details) or 'payment_method_nonce'
+          # Pass 'token' (along with CC details) or 'payment_method_nonce'
           # For convenience, we translate 'token' into 'payment_method_nonce'
           # Note: we remove the token because the Braintree AM implementation always requires a CreditCard object
           options[:payment_method_nonce] = pm_props_hsh.delete(:token)
