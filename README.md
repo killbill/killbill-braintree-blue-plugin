@@ -1,11 +1,11 @@
 killbill-braintree-plugin
 =========================
 
-Plugin was first developed by Ardura sp. z o.o.
-See original repo https://bitbucket.org/safekiddo/killbill-braintree-blue-plugin.git
+Plugin to use [Braintree](https://www.braintreepayments.com/) as a gateway.
 
-We cloned the repo to have it on github along with the other payment plugins supported on Kill Bill.
-It is advisable to also check for latest commit from original repo before using.
+Release builds are available on [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.kill-bill.billing.plugin.ruby%22%20AND%20a%3A%22braintree_blue-plugin%22) with coordinates `org.kill-bill.billing.plugin.ruby:braintree_blue-plugin`.
+
+This plugin was originally developed by [Ardura sp. z o.o.](https://bitbucket.org/safekiddo/killbill-braintree-blue-plugin.git).
 
 Kill Bill compatibility
 -----------------------
