@@ -30,7 +30,7 @@ module Killbill #:nodoc:
           :payment_method_token => true
         }
 
-        options.merge(get_merchant_id(currency))
+        options.merge(get_merchant_id(currency, context.tenant_id))
 
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
@@ -39,7 +39,7 @@ module Killbill #:nodoc:
       def capture_payment(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        options.merge(get_merchant_id(currency))
+        options.merge(get_merchant_id(currency, context.tenant_id))
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
       end
@@ -48,7 +48,7 @@ module Killbill #:nodoc:
         options = {
           :payment_method_token => true
         }
-        options.merge(get_merchant_id(currency))
+        options.merge(get_merchant_id(currency, context.tenant_id))
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
       end
@@ -64,7 +64,7 @@ module Killbill #:nodoc:
         options = {
           :payment_method_token => true
         }
-        options.merge(get_merchant_id(currency))
+        options.merge(get_merchant_id(currency, context.tenant_id))
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
       end
@@ -72,7 +72,7 @@ module Killbill #:nodoc:
       def refund_payment(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        options.merge(get_merchant_id(currency))
+        options.merge(get_merchant_id(currency, context.tenant_id))
         properties = merge_properties(properties, options)
         super(kb_account_id, kb_payment_id, kb_payment_transaction_id, kb_payment_method_id, amount, currency, properties, context)
       end
@@ -88,7 +88,7 @@ module Killbill #:nodoc:
       def search_payments(search_key, offset, limit, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        options.merge(get_merchant_id(currency))
+        options.merge(get_merchant_id(currency, context.tenant_id))
         properties = merge_properties(properties, options)
         super(search_key, offset, limit, properties, context)
       end
@@ -191,17 +191,19 @@ module Killbill #:nodoc:
         end
       end
 
-      def get_merchant_id(currency)
+      def get_merchant_id(currency, kb_tenant_id=nil)
+        config = ::Killbill::Plugin::ActiveMerchant.config(kb_tenant_id)
         options = {}
-        if (config[:braintree_blue][:multicurrency])
-            case currency
-                when "USD"
-                    options = { :merchant_account_id => config[:multicurrency][:USD] }
-                when "EUR"
-                    options = { :merchant_account_id => config[:multicurrency][:EUR] }
-                when "PLN"
-                    options = { :merchant_account_id => config[:multicurrency][:PLN] }
-            end
+        if config[:braintree_blue][:multicurrency]
+          multicurrency = config[:multicurrency] || {}
+          case currency
+            when "USD"
+              options = {:merchant_account_id => multicurrency[:USD]}
+            when "EUR"
+              options = {:merchant_account_id => multicurrency[:EUR]}
+            when "PLN"
+              options = {:merchant_account_id => multicurrency[:PLN]}
+          end
         end
         options
       end
