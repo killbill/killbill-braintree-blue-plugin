@@ -16,6 +16,8 @@ require 'yaml'
 require 'killbill'
 require 'killbill/helpers/active_merchant'
 
+require 'braintree_blue/ext/active_merchant/active_merchant.rb'
+
 require 'braintree_blue/api'
 require 'braintree_blue/private_api'
 
