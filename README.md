@@ -207,7 +207,29 @@ curl -v \
      "http://127.0.0.1:8080/1.0/kb/accounts/<ACCOUNT_ID>/paymentMethods?isDefault=true"
 ```
 
-Note that you cannot add a second card on an existing customer using a nonce.
+To add a second card on an existing customer using a nonce:
+
+```
+curl -v \
+     -X POST \
+     -u admin:password \
+     -H 'X-Killbill-ApiKey: bob' \
+     -H 'X-Killbill-ApiSecret: lazar' \
+     -H 'X-Killbill-CreatedBy: admin' \
+     -H 'Content-Type: application/json' \
+     -d '{
+       "pluginName": "killbill-braintree_blue",
+       "pluginInfo": {
+         "properties": [
+           {
+             "key": "token",
+             "value": "<NONCE>"
+           }
+         ]
+       }
+     }' \
+     "http://127.0.0.1:8080/1.0/kb/accounts/<ACCOUNT_ID>/paymentMethods?isDefault=true"
+```
 
 Plugin properties
 -----------------
