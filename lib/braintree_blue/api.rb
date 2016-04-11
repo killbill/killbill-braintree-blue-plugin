@@ -4,7 +4,7 @@ module Killbill #:nodoc:
 
       def initialize
         gateway_builder = Proc.new do |config|
-          # Change this if needed
+          ::ActiveMerchant::Billing::BraintreeBlueGateway.application_id = config[:channel] || 'killbill_SP'
           ::ActiveMerchant::Billing::BraintreeBlueGateway.new :merchant_id => config[:merchant_id],
                                                               :public_key  => config[:public_key],
                                                               :private_key => config[:private_key]
