@@ -1,3 +1,9 @@
+0.2.1
+    Fix merchant_id look-up in multi-tenancy configuration
+    Increase default message field length to 510
+    Add endpoint to generate token
+    Add ability to add additional cards on existing customer using nonce
+
 0.2.0
     Initial release for Kill Bill 0.16.x
 
