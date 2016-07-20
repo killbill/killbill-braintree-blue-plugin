@@ -13,7 +13,8 @@ module Killbill #:nodoc:
         # Unfortunately, the ActiveMerchant Braintree implementation will drop that information when adding a card to an existing customer
         customer_response = primary_response.params['braintree_customer'] || {}
 
-        token = options[:token] || primary_response.params['credit_card_token']
+        # See active_merchant.rb
+        token = options[:token] || primary_response.params['token']
         card_response = (customer_response['credit_cards'] || []).first || {}
         cc_exp_dates = (card_response['expiration_date'] || '').split('/')
 
