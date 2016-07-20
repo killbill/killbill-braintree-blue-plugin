@@ -101,7 +101,7 @@ describe Killbill::BraintreeBlue::PaymentPlugin do
       fail('it should not accept a random nonce')
     rescue => e
       # TODO Could we generate a valid nonce?
-      e.message.starts_with?('Unknown payment_method_nonce.').should be_true
+      e.message.starts_with?('Unknown or expired payment_method_nonce.').should be_true
     end
   end
 
