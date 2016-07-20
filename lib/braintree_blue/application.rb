@@ -27,6 +27,9 @@ end
 # curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/token
 get '/plugins/killbill-braintree_blue/token', :provides => 'json' do
   kb_tenant_id = request.GET['kb_tenant_id']
+  kb_tenant = request.env['killbill_tenant']
+  kb_tenant_id ||= kb_tenant.id.to_s unless kb_tenant.nil?
+
   environment = request.GET['environment'] || 'sandbox'
   customer_id = request.GET['customer_id']
 
@@ -37,7 +40,7 @@ get '/plugins/killbill-braintree_blue/token', :provides => 'json' do
   Braintree::Configuration.private_key = bconfig[:private_key]
   Braintree::Configuration.public_key = bconfig[:public_key]
 
-  Braintree::ClientToken.generate(:customer_id => customer_id)
+  { :client_token => Braintree::ClientToken.generate(:customer_id => customer_id) }.to_json
 end
 
 # curl -v http://127.0.0.1:9292/plugins/killbill-braintree_blue/form
