@@ -232,6 +232,8 @@ curl -v \
      "http://127.0.0.1:8080/1.0/kb/accounts/<ACCOUNT_ID>/paymentMethods?isDefault=true"
 ```
 
+A full end-to-end integration demo is also available [here](https://github.com/killbill/killbill-braintree-demo).
+
 Plugin properties
 -----------------
 
