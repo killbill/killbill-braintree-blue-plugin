@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    killbill-braintree_blue (0.3.0)
+    killbill-braintree_blue (0.3.1)
       actionpack (~> 4.1.0)
       actionview (~> 4.1.0)
       activemerchant (~> 1.55.0)
